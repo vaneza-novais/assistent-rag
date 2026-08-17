@@ -13,5 +13,8 @@ pytest
 python-dotenv
 tqdm
 typer
+
+sentence-transformers
+
 ipykernel 
 jupyter
