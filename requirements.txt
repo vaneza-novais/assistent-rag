@@ -15,6 +15,7 @@ tqdm
 typer
 
 sentence-transformers
+faiss-cpu
 
 ipykernel 
 jupyter
