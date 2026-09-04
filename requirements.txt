@@ -17,5 +17,8 @@ typer
 sentence-transformers
 faiss-cpu
 
+langchain
+langchain_community
+
 ipykernel 
 jupyter

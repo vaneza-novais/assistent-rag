@@ -4,9 +4,9 @@ import numpy as np
 import os
 import faiss
 
-path = 'data/processed/chunks_peps.json'
-outpath_embeddings = 'data/processed/embeddings_peps.npy'
-caminho_json = "data/processed/chunks_peps.json" # Ler o arquivo JSON
+path = '../data/processed/chunks_peps.json'
+outpath_embeddings = '../data/processed/embeddings_peps.npy'
+caminho_json = "../data/processed/chunks_peps.json" # Ler o arquivo JSON
 
 # Definir o modelo 
 model = SentenceTransformer('BAAI/bge-small-en-v1.5') # as consultas precisam estar em ingles para manter a perfomance
