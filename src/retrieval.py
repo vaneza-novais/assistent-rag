@@ -74,7 +74,7 @@ class busca:
         return I
 
     def metrica(self, tipo):
-        '''Indique o tipo de busca: 1 para IndexFlatL2, 2 para XXXX e 3 para YYYY'''
+        '''Indique o tipo de busca: 1 para IndexFlatL2, 2 para IndexIVFFlat e 3 para IndexIVFPQ'''
         self.tipo = tipo
 
         if self.tipo == 1: #IndexFlatL2

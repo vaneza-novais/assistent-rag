@@ -34,46 +34,46 @@ def fazer_busca(query: str, k: int = 5) -> str:
     indices = buscador.metrica(tipo= 1) #IndexFlatL2
 
     if indices is None or len(indices[0]) == 0:
-        return "Nenhuma informação encontrada"
+        return 'Nenhuma informação encontrada'
      
     chunks_encontrados = [ # Recupera os chunks de texto originais a partir dos índices retornados pelo FAISS
         chunks[i]['text'] for i in indices[0] if i < len(chunks)
     ]
     
-    return "\n\n---\n\n".join(chunks_encontrados)
+    return '\n\n---\n\n'.join(chunks_encontrados)
 
 #%%
 def traduzir_query_ingles(query: str) -> str:
     ''' Receber a query em pt e traduzir pra ingles'''
 
     #if isinstance(query, dict):
-        #query = query.get("query", "")
+        #query = query.get('query', '')
 
     if isinstance(query, dict):
         query = list(query.values())[0]
 
     prompt = ChatPromptTemplate.from_template(
-        "Você é um assistente especialista em busca vetorial. "
-        "Traduza a seguinte pergunta do usuário para o inglês de forma clara e direta. "
-        "Retorne APENAS o texto traduzido em inglês, sem explicações adicionais.\n\n"
-        "Pergunta: {query}"
+        'Você é um assistente especialista em busca vetorial. '
+        'Traduza a seguinte pergunta do usuário para o inglês de forma clara e direta. '
+        'Retorne APENAS o texto traduzido em inglês, sem explicações adicionais.\n\n'
+        'Pergunta: {query}'
     )
 
     chain = prompt | llm # pegar a saida do objeto a esquerda e passa como entrada para a direita
     english_query = chain.invoke( # retorna um obj contendo a messagem da IA
-        {"query": query}
+        {'query': query}
     )
-   
-    print(f"🔍 [DEBUG Tool] Query original: '{query}' | Traduzida: '{english_query.content}'")
 
     # Extrai o texto do content (content extrai apenas o texto bruto contido dentro da msg)
     if isinstance(english_query.content, list):
-        texto = "".join([
-            p if isinstance(p, str) else p.get("text", "") for p in english_query.content
+        texto = ''.join([
+            p if isinstance(p, str) else p.get('text', '') for p in english_query.content
         ])
 
     else:
         texto = str(english_query.content)
+
+    print(f'\n[Translate]\nQuery original: '{query}' \nTraduzida: '{texto}'')
 
     return texto
 
@@ -93,9 +93,12 @@ def procurar_repositorio_doc(query) -> str:
         query = list(query.values())[0]
 
     #query_ingles = traduzir_query_ingles(query)
-    return fazer_busca(
-        query, 
-        k=5
+    return (
+            fazer_busca(
+            query, 
+            k=5
+        ) +
+    '[Instrução de Idioma: Sintetize as informações acima e responda em Português do Brasil.]'
     )
 
 #%%
@@ -116,12 +119,14 @@ llm_tools = llm.bind_tools(tools)
 
 # Definir o que e a forma que queremos de resposta. Não é exibido ao ausuário.
 system_message = SystemMessage( #Prompt programador
-    "Você é um guia de estudos que ajuda programadores, cientistas de dados e afins.\n\n"
-    "Evite conversar sobre assuntos paralelos ao tópico escolhido. \n\n"
-    "Você pode ser amigável e tratar o estudante conforme ele te tratar. Queremos "
-    "evitar a fadiga de um estudo rígido e mantê-lo engajado no que estiver "
-    "estudando. Talvez até adicionando algum curiosidade. \n\n"
-    "As próximas mensagens serão de um estudante."
+    'Você é um guia de estudos que ajuda programadores, cientistas de dados e afins.\n\n'
+    'Evite conversar sobre assuntos paralelos ao tópico escolhido. \n\n'
+    'As respostas devem ser no mesmo idioma da pergunta feita pelo estudante.'
+    'Independente do idioma da base de conhecimento\n\n'
+    'Você pode ser amigável e tratar o estudante conforme ele te tratar. Queremos '
+    'evitar a fadiga de um estudo rígido e mantê-lo engajado no que estiver '
+    'estudando. Talvez até adicionando algum curiosidade. \n\n'
+    'As próximas mensagens serão de um estudante.'
 )
 
 # Criar historico de mensages
@@ -130,12 +135,13 @@ messages: list[BaseMessage] = [
 ]
 
 while True:
-    input_pt = str(input("Qual a pergunta?")).lower()
-    input_humano = traduzir_query_ingles(input_pt)
-    msg_humano = HumanMessage(input_humano)
+    input_pt = str(input('Qual a pergunta?')).lower()
 
     if input_pt == 'sair':
         break
+
+    input_humano = traduzir_query_ingles(input_pt)
+    msg_humano = HumanMessage(input_humano)
 
     messages.append(msg_humano)
     
@@ -144,7 +150,7 @@ while True:
 
     # verificar se o modelo optou por chamar a ferramentea
     if llm_response.tool_calls:
-        print('FERRAMENTA ACIONADA. \nO modelo está olhando a doc do repositorio')
+        print('\n⚙️ TOOL ACIONADA. \nO modelo está olhando a doc do repositorio.')
 
         # executar cada tool solicitada pelo modelo
         for tool_call in llm_response.tool_calls:
@@ -164,16 +170,18 @@ while True:
         # voltar a segunda chamada pra IA juntar a resposta final com o contexto de busca
 
         reposta_final = llm_tools.invoke(messages)
+        print(40*'*-')
         print('Resposta Final (com RAG):')
-        print(80*'-')
+        print(80*' ')
         print(reposta_final.content)
+        print(40*'*-')
 
     else:
-        query_ingles = traduzir_query_ingles(query)
+        print(40*'*-')
         print('Resposta Final:')
-        print(80*'-')
+        print(80*' ')
         print(llm_response.content)
+        print(40*'*-')
     
-
 
 # %%
