@@ -1,23 +1,22 @@
 # **Pepito** - Assistente de estilo para código Python
 Assistente que responde perguntas sobre uma base de documentos própria, combinando busca semântica (RAG) com um agente que decide quando buscar informação.
-PERGUNTA
-   ↓
-tradução PT → EN
-   ↓
-embedding da query
-   ↓
-FAISS
-   ↓
-índices
-   ↓
-chunks
-   ↓
-ToolMessage
-   ↓
-LLM
-   ↓
-resposta
-
+PERGUNTA  
+   ↓  
+tradução PT → EN  
+   ↓  
+embedding da query  
+   ↓  
+FAISS  
+   ↓  
+índices  
+   ↓  
+chunks  
+   ↓  
+ToolMessage  
+   ↓  
+LLM  
+   ↓  
+resposta  
 
 *Construído passo a passo conforme o progresso de estudo relacionado a GenAI.*
 
@@ -51,32 +50,13 @@ O arquivo responsável por isso é o chunking.py. Para otimizar, foi implantado 
  
  ### 3. LangChain e LangGraph - Transformação em agente
  LangChain e LangGraph são ferramentas que visam otimizar aplicações orientadas por LLM. Enquanto o LangChain é responsável por fazer a conexão entre a LLM e a fonte externa, o LangGraph permite que ele aja de forma autonoma na escolha de qual fonte de dados utilizar. 
- A execução com LangChain presente em pipeline.py foi para demonstrar como o agente funciona em uma sequencia linear de interação humano - LLM. 
- Com o acréscimo de LangGraph, foi feito de modo manual o ciclo que o LangGraph automatiza. Ou seja:
-  Usuário
-   ↓
-LLM
-   ↓
-O LLM decidiu chamar uma tool?
-   ↓
-  SIM
-   ↓
-Executa a tool manualmente
-   ↓
-ToolMessage
-   ↓
-LLM novamente
-   ↓
-Resposta final
-
- 
- 
+ A execução com LangChain presente em pipeline.ipynb foi para demonstrar como o agente funciona em uma sequencia linear de interação humano - LLM. 
+ Com o acréscimo de LangGraph, foi feito de modo manual o ciclo que o LangGraph automatiza em agente.py. Ou seja:
 
 **Ferramentas**
  - FAISS
  - LangChain
  - LangGraph
- - LLM : gemini-3.5-flash-lite
  
 **Conceitos**
  - LLM 
@@ -85,7 +65,31 @@ Resposta final
  - LLM : gemini-3.5-flash-lite
 
 ## Funcionamento
-Pergunta -> Agente decide -> Busca no FAISS (se precisar) -> LLM gera resposta
+  Usuário pergunta  
+   ↓  
+LLM  
+   ↓  
+O LLM decidiu chamar uma tool?  
+   ↓  
+  SIM  
+   ↓  
+Executa a tool manualmente  
+   ↓  
+ToolMessage  
+   ↓  
+LLM novamente  
+   ↓  
+Resposta final  
+   ↓  
+  Usuário pergunta  
+   ↓  
+LLM  
+   ↓  
+O LLM decidiu chamar uma tool?  
+   ↓  
+  NÃO  
+   ↓  
+LLM   
 
 ## Resultados
 
