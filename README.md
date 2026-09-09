@@ -92,6 +92,10 @@ O LLM decidiu chamar uma tool?
 LLM   
 
 ## Resultados
+![](./reports/results/1.png)
+![](./reports/results/2.png)
+![](./reports/results/3.png)
+![](./reports/results/4.png)
 
 
 ## Próximos passos

@@ -21,6 +21,8 @@ from langchain_core.messages import (
 
 from langchain_core.tools import BaseTool
 
+from IPython.display import Markdown, display
+
 #%%
 def fazer_busca(query: str, k: int = 5) -> str:
     # utilizando classe criada no retrieval
@@ -73,7 +75,12 @@ def traduzir_query_ingles(query: str) -> str:
     else:
         texto = str(english_query.content)
 
-    print(f'\n[Translate]\nQuery original: {query} \nTraduzida: {texto}')
+    display(
+        Markdown(
+            f'\n\n[Translate]\n\nQuery original: {query} \n\nTraduzida: {texto}'
+        )
+    )
+    #print(f'\n[Translate]\nQuery original: {query} \nTraduzida: {texto}')
 
     return texto
 
@@ -184,7 +191,8 @@ while True:
         print(40*'*-')
         print('Resposta Final (com RAG):')
         print(80*' ')
-        print(texto_final)
+        display(Markdown(texto_final))
+        #print(texto_final)
         print(40*'*-')
 
     else:
@@ -202,7 +210,6 @@ while True:
         print(40*'*-')
         print('Resposta Final:')
         print(80*' ')
-        print(texto_resposta)
+        display(Markdown(texto_resposta))
         print(40*'*-')
-
 # %%
