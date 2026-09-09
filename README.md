@@ -64,32 +64,16 @@ O arquivo responsável por isso é o chunking.py. Para otimizar, foi implantado 
  - RAG
  - LLM : gemini-3.5-flash-lite
 
-## Funcionamento
-  Usuário pergunta  
-   ↓  
+## Lógica de decisão do agente
+Usuário pergunta  
+↓  
 LLM  
-   ↓  
+↓  
 O LLM decidiu chamar uma tool?  
-   ↓  
-  SIM  
-   ↓  
-Executa a tool manualmente  
-   ↓  
-ToolMessage  
-   ↓  
-LLM novamente  
-   ↓  
-Resposta final  
-   ↓  
-  Usuário pergunta  
-   ↓  
-LLM  
-   ↓  
-O LLM decidiu chamar uma tool?  
-   ↓  
-  NÃO  
-   ↓  
-LLM   
+↓  
+SIM → Executa a tool manualmente → ToolMessage → LLM novamente → Resposta final  
+↓  
+NÃO → Resposta final  
 
 ## Resultados
 ![](./reports/results/1.png)
@@ -102,9 +86,16 @@ LLM
 Aplicar técnicas de Fine-tuning e Avaliação.
 
 ### Como executar:
-1.  git clone
-2.  pip install -r requirements.txt
-
+1.   Clone o repositório:  
+git clone https://github.com/vaneza-novais/assistent-rag.git  
+cd assistent-rag  
+2.  Instale as dependências:
+pip install -r requirements.txt
+3. Configure as variáveis de ambiente:
+cp .env.example .env  
+Preencha o .env com sua chave de API (ex: GOOGLE_API_KEY).
+4. Execute o agente:
+python src/agent.py
 ### Project Organization
 assistente-rag/  
 ├── data/  
