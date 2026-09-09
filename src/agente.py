@@ -73,7 +73,7 @@ def traduzir_query_ingles(query: str) -> str:
     else:
         texto = str(english_query.content)
 
-    print(f'\n[Translate]\nQuery original: '{query}' \nTraduzida: '{texto}'')
+    print(f'\n[Translate]\nQuery original: {query} \nTraduzida: {texto}')
 
     return texto
 
@@ -101,8 +101,8 @@ def procurar_repositorio_doc(query) -> str:
     '[Instrução de Idioma: Sintetize as informações acima e responda em Português do Brasil.]'
     )
 
-#%%
 
+#%%
 # Iniciando o modelo
 from langchain.chat_models import init_chat_model
 
@@ -121,8 +121,7 @@ llm_tools = llm.bind_tools(tools)
 system_message = SystemMessage( #Prompt programador
     'Você é um guia de estudos que ajuda programadores, cientistas de dados e afins.\n\n'
     'Evite conversar sobre assuntos paralelos ao tópico escolhido. \n\n'
-    'As respostas devem ser no mesmo idioma da pergunta feita pelo estudante.'
-    'Independente do idioma da base de conhecimento\n\n'
+    'As respostas devem ser em portugues\n\n'
     'Você pode ser amigável e tratar o estudante conforme ele te tratar. Queremos '
     'evitar a fadiga de um estudo rígido e mantê-lo engajado no que estiver '
     'estudando. Talvez até adicionando algum curiosidade. \n\n'
@@ -169,19 +168,41 @@ while True:
 
         # voltar a segunda chamada pra IA juntar a resposta final com o contexto de busca
 
-        reposta_final = llm_tools.invoke(messages)
+        reposta_final = llm_tools.invoke(messages)            
+        # Se .content for uma lista, junta o texto de cada bloco:
+        if isinstance(reposta_final.content, list):
+            texto_final = "".join(
+                [
+                    bloco.get("text", "")
+                    for bloco in reposta_final.content
+                    if isinstance(bloco, dict)
+                ]
+            )
+        else:
+            texto_final = reposta_final.content
+
         print(40*'*-')
         print('Resposta Final (com RAG):')
         print(80*' ')
-        print(reposta_final.content)
+        print(texto_final)
         print(40*'*-')
 
     else:
+        if isinstance(llm_response.content, list):
+            texto_resposta = "".join(
+                [
+                    bloco.get("text", "")
+                    for bloco in llm_response.content
+                    if isinstance(bloco, dict)
+                ]
+            )
+        else:
+            texto_resposta = llm_response.content
+
         print(40*'*-')
         print('Resposta Final:')
         print(80*' ')
-        print(llm_response.content)
+        print(texto_resposta)
         print(40*'*-')
-    
 
 # %%
